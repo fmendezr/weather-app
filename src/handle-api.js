@@ -14,7 +14,8 @@ async function getCurrentWeather(lat, lon) {
 async function getCoordinates(name) {
   try {
     const response = await fetch(
-      `http://api.openweathermap.org/geo/1.0/direct?q=${name}&limit=1&appid=6079b902d16c1d19a4a0e658ed40c5a2`
+      `http://api.openweathermap.org/geo/1.0/direct?q=${name}&limit=1&appid=6079b902d16c1d19a4a0e658ed40c5a2`,
+      { mode: "cors" }
     );
     const data = await response.json();
     const latLon = {
