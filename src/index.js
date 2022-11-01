@@ -86,7 +86,7 @@ const renderWeatherComponent = (weatherObject) => {
 
   const units = document.createElement("h4");
   units.id = "units";
-  units.textContent = "C";
+  units.textContent = "C" + String.fromCharCode(176);
   leftSide.appendChild(units);
 
   const rightSide = document.createElement("div");
@@ -95,17 +95,18 @@ const renderWeatherComponent = (weatherObject) => {
 
   const feelsLike = document.createElement("p");
   feelsLike.id = "feelsLike";
-  feelsLike.textContent = `Feels like: ${weatherObject.feelsLike}`;
+  feelsLike.textContent =
+    `Feels like: ${weatherObject.feelsLike} C` + String.fromCharCode(176);
   rightSide.appendChild(feelsLike);
 
   const windSpeed = document.createElement("p");
   windSpeed.id = "wind";
-  windSpeed.textContent = `Wind: ${weatherObject.windSpeed}`;
+  windSpeed.textContent = `Wind: ${weatherObject.windSpeed} km/h`;
   rightSide.appendChild(windSpeed);
 
   const humidity = document.createElement("p");
   humidity.id = "humidity";
-  humidity.textContent = `Humidity: ${weatherObject.humidity}`;
+  humidity.textContent = `Humidity: ${weatherObject.humidity} %`;
   rightSide.appendChild(humidity);
 };
 
@@ -138,5 +139,3 @@ document.querySelector("form").addEventListener("submit", (event) => {
   event.preventDefault();
   determineWhatToRender(weather(document.querySelector("input").value));
 });
-
-determineWhatToRender(weather("london"), true);
