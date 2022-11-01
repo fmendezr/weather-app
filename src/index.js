@@ -57,7 +57,7 @@ async function weather(name) {
   }
 }
 
-function renderWeatherComponent(weatherObject) {
+const renderWeatherComponent = (weatherObject) => {
   const main = document.createElement("main");
   document.querySelector("body").appendChild(main);
 
@@ -107,7 +107,13 @@ function renderWeatherComponent(weatherObject) {
   humidity.id = "humidity";
   humidity.textContent = `Humidity: ${weatherObject.humidity}`;
   rightSide.appendChild(humidity);
-}
+};
+
+const renderErrorComponent = () => {
+  const text = document.createElement("p");
+  text.textContent = "No matching location found!";
+  docuemnt.querySelector("form").appendChild(text);
+};
 
 async function determineWhatToRender(weatherObject, first = false) {
   const weatherData = await weatherObject;
