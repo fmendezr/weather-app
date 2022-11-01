@@ -3,7 +3,7 @@ import "./style.css";
 async function getCurrentWeather(lat, lon) {
   try {
     const response = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=6079b902d16c1d19a4a0e658ed40c5a2`,
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=6079b902d16c1d19a4a0e658ed40c5a2&units=metric`,
       { mode: "cors" }
     );
     const weatherData = await response.json();
@@ -36,19 +36,79 @@ async function weather(name) {
         await coordinates
       ).lon
     );
-    const nameCountry = data.name;
+    const namelocation = data.name;
+    const countryCode = data.sys.country;
     const description = data.weather[0].description;
     const temperature = data.main.temp;
     const feelsLike = data.main.feels_like;
     const windSpeed = data.wind.speed;
     const humidity = data.main.humidity;
     return {
-      nameCountry,
+      namelocation,
+      countryCode,
       description,
       temperature,
       feelsLike,
       windSpeed,
       humidity,
     };
-  } catch (err) {}
+  } catch (err) {
+    return "error";
+  }
 }
+
+async function renderWeatherComponent(weatherObject) {
+  const weatherData = await weatherObject;
+
+  const main = document.createElement("main");
+  document.querySelector("body").appendChild(main);
+
+  const locationName = document.createElement("h1");
+  locationName.id = "location";
+  locationName.textContent = `${weatherData.namelocation}, ${weatherData.countryCode}`;
+  main.appendChild(locationName);
+
+  const description = document.createElement("h2");
+  description.id = "description";
+  description.textContent = `${weatherData.description}`;
+  main.appendChild(description);
+
+  const bottomContainer = document.createElement("div");
+  bottomContainer.id = "buttomContainer";
+  main.appendChild(bottomContainer);
+
+  const leftSide = document.createElement("div");
+  leftSide.id = "leftSide";
+  bottomContainer.appendChild(leftSide);
+
+  const temperature = document.createElement("h2");
+  temperature.id = "temperature";
+  temperature.textContent = `${weatherData.temperature}`;
+  leftSide.appendChild(temperature);
+
+  const units = document.createElement("h4");
+  units.id = "units";
+  units.textContent = "C";
+  leftSide.appendChild(units);
+
+  const rightSide = document.createElement("div");
+  rightSide.id = "rightSide";
+  bottomContainer.appendChild(rightSide);
+
+  const feelsLike = document.createElement("p");
+  feelsLike.id = "feelsLike";
+  feelsLike.textContent = `Feels like: ${weatherData.feelsLike}`;
+  rightSide.appendChild(feelsLike);
+
+  const windSpeed = document.createElement("p");
+  windSpeed.id = "wind";
+  windSpeed.textContent = `Wind: ${weatherData.windSpeed}`;
+  rightSide.appendChild(windSpeed);
+
+  const humidity = document.createElement("p");
+  humidity.id = "humidity";
+  humidity.textContent = `Humidity: ${weatherData.humidity}`;
+  rightSide.appendChild(humidity);
+}
+
+renderWeatherComponent(weather("london"));
