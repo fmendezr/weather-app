@@ -112,13 +112,20 @@ const renderWeatherComponent = (weatherObject) => {
 const renderErrorComponent = () => {
   const text = document.createElement("p");
   text.textContent = "No matching location found!";
-  docuemnt.querySelector("form").appendChild(text);
+  text.id = "errorMessage";
+  document.querySelector("form").appendChild(text);
 };
 
 async function determineWhatToRender(weatherObject, first = false) {
   const weatherData = await weatherObject;
+
+  try {
+    document.getElementById("errorMessage").remove();
+  } catch {}
+
   if (weatherData == "error") {
     console.log("error");
+    renderErrorComponent();
   } else if (first == true) {
     renderWeatherComponent(weatherData);
   } else {
