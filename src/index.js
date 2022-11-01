@@ -6,7 +6,7 @@ async function getCurrentWeather(lat, lon) {
     { mode: "cors" }
   );
   const weatherData = await response.json();
-  console.log(weatherData);
+  return weatherData;
 }
 
 async function getCoordinates(name) {
@@ -23,7 +23,26 @@ async function getCoordinates(name) {
 
 async function weather(name) {
   const coordinates = getCoordinates(name);
-  getCurrentWeather((await coordinates).lat, (await coordinates).lon);
+  const data = await getCurrentWeather(
+    (
+      await coordinates
+    ).lat,
+    (
+      await coordinates
+    ).lon
+  );
+  const nameCountry = data.name;
+  const description = data.weather[0].description;
+  const temperature = data.main.temp;
+  const feelsLike = data.main.feels_like;
+  const windSpeed = data.wind.speed;
+  const humidity = data.main.humidity;
+  return {
+    nameCountry,
+    description,
+    temperature,
+    feelsLike,
+    windSpeed,
+    humidity,
+  };
 }
-
-weather("london");
