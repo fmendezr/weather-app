@@ -57,20 +57,18 @@ async function weather(name) {
   }
 }
 
-async function renderWeatherComponent(weatherObject) {
-  const weatherData = await weatherObject;
-
+function renderWeatherComponent(weatherObject) {
   const main = document.createElement("main");
   document.querySelector("body").appendChild(main);
 
   const locationName = document.createElement("h1");
   locationName.id = "location";
-  locationName.textContent = `${weatherData.namelocation}, ${weatherData.countryCode}`;
+  locationName.textContent = `${weatherObject.namelocation}, ${weatherObject.countryCode}`;
   main.appendChild(locationName);
 
   const description = document.createElement("h2");
   description.id = "description";
-  description.textContent = `${weatherData.description}`;
+  description.textContent = `${weatherObject.description}`;
   main.appendChild(description);
 
   const bottomContainer = document.createElement("div");
@@ -83,7 +81,7 @@ async function renderWeatherComponent(weatherObject) {
 
   const temperature = document.createElement("h2");
   temperature.id = "temperature";
-  temperature.textContent = `${weatherData.temperature}`;
+  temperature.textContent = `${weatherObject.temperature}`;
   leftSide.appendChild(temperature);
 
   const units = document.createElement("h4");
@@ -97,18 +95,35 @@ async function renderWeatherComponent(weatherObject) {
 
   const feelsLike = document.createElement("p");
   feelsLike.id = "feelsLike";
-  feelsLike.textContent = `Feels like: ${weatherData.feelsLike}`;
+  feelsLike.textContent = `Feels like: ${weatherObject.feelsLike}`;
   rightSide.appendChild(feelsLike);
 
   const windSpeed = document.createElement("p");
   windSpeed.id = "wind";
-  windSpeed.textContent = `Wind: ${weatherData.windSpeed}`;
+  windSpeed.textContent = `Wind: ${weatherObject.windSpeed}`;
   rightSide.appendChild(windSpeed);
 
   const humidity = document.createElement("p");
   humidity.id = "humidity";
-  humidity.textContent = `Humidity: ${weatherData.humidity}`;
+  humidity.textContent = `Humidity: ${weatherObject.humidity}`;
   rightSide.appendChild(humidity);
 }
 
-renderWeatherComponent(weather("london"));
+async function determineWhatToRender(weatherObject, first = false) {
+  const weatherData = await weatherObject;
+  if (weatherData == "error") {
+    console.log("error");
+  } else if (first == true) {
+    renderWeatherComponent(weatherData);
+  } else {
+    document.querySelector("main").remove();
+    renderWeatherComponent(weatherData);
+  }
+}
+
+document.querySelector("form").addEventListener("submit", (event) => {
+  event.preventDefault();
+  determineWhatToRender(weather(document.querySelector("input").value));
+});
+
+determineWhatToRender(weather("london"), true);
